@@ -4,21 +4,10 @@ using UnityEngine;
 
 public class Transporter : MonoBehaviour {
 
-	public Collider pointA;
-	public Collider pointB;
+	public Transform exit;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	public Transform GetExitTransform()
+	public Vector3 GetExitPosition()
 	{
-		
+		return exit.position;
 	}
 }
