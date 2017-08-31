@@ -48,11 +48,10 @@ public class PlayerManager : MonoBehaviour {
 			//			Debug.Log ("PlayerManager.cs : Teleport() : Transporter is null");
 			return;
 		}
-
-		Vector3 newPos;
+			
 		foreach (Transporter transporter in transporters)
 		{
-			newPos = transporter.GetExitPosition ();
+			Vector3 newPos = transporter.GetExitPosition ();
 			if (dir == DIRECTION.UP && this.transform.position.z < newPos.z)
 			{
 				this.transform.position = transporter.GetExitPosition ();

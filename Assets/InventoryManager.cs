@@ -9,8 +9,10 @@ public class InventoryManager : MonoBehaviour {
 	public TextMesh item_name;
 	public TextMesh item_stats;
 	public TextMesh item_description;
+	public ItemDatabase db;
 	int select_index;
 	List<Item> inventory;
+	List<GameObject> inventory_object;
 
 	public enum DIRECTION {UP, DOWN, LEFT, RIGHT};
 
@@ -18,6 +20,7 @@ public class InventoryManager : MonoBehaviour {
 	{
 		select_index = 11;
 		inventory = new List<Item> ();
+		inventory_object = new List<GameObject> ();
 	}
 
 	public void AddItem(Item item)
@@ -34,15 +37,83 @@ public class InventoryManager : MonoBehaviour {
 
 		// otherwise add into list
 		inventory.Add (item);
+		int index = ConvertIndexFromInventoryToSlot(inventory_object.Count);
+		GameObject obj = Instantiate (db.GetPrefab (item.id), slots [index].transform.position, Quaternion.identity);
+		obj.transform.parent = slots [index].transform;
+		obj.SetActive (slots [index].activeSelf);
+		inventory_object.Add(obj);
 	}
 
-	public void ShowInventory()
+	// NOT SCALABLE
+	public int ConvertIndexFromSlotToInventory(int index)
+	{
+		if (11 <= index && index <= 15)
+		{
+			return index - 11;
+		}
+		else if (19 <= index && index <= 23)
+		{
+			return index - 14;
+		}
+		else if (27 <= index && index <= 31)
+		{
+			return index - 17;
+		}
+		else //if (35 <= index && index <= 39)
+		{
+			return index - 20;
+		}
+	}
+
+	public int ConvertIndexFromInventoryToSlot(int index)
+	{
+		return index + 11 + (index / 5) * 8;
+	}
+
+	// DOESNT UPDATE ITEM DETAILS
+	public void RemoveItem(Item item)
 	{
 		for (int i = 0; i < inventory.Count; i++)
 		{
-			//Instantiate ();
-			//inventory[i].id;
+			if (inventory [i] == item)
+			{
+				inventory.RemoveAt (i);
+				inventory_object.RemoveAt (i);
+				int index = ConvertIndexFromInventoryToSlot (i);
+				Destroy(slots [index].transform.GetChild (0).gameObject);
+				return;
+			}
 		}
+	}
+
+
+	public void RemoveItem()
+	{
+		int index = ConvertIndexFromSlotToInventory (select_index);
+
+		if (index >= inventory.Count)
+		{
+			return;
+		}
+
+		Item item = inventory [index];
+		for (int i = 0; i < inventory.Count; i++)
+		{
+			if (inventory [i] == item)
+			{
+				inventory.RemoveAt (i);
+				inventory_object.RemoveAt (i);
+				index = ConvertIndexFromInventoryToSlot(i);
+				Destroy(slots [index].transform.GetChild (0).gameObject);
+				return;
+			}
+		}
+	}
+
+	// IMPLEMENT
+	public void UpdateItemDetails()
+	{
+
 	}
 
 	// for debugging
@@ -154,5 +225,22 @@ public class InventoryManager : MonoBehaviour {
 		}
 
 		selector.transform.position = slots [select_index].transform.position;
+
+		// update item name, stats, description, rarity for selected item
+		if (slots [select_index].transform.childCount != 0)
+		{
+			Item item = slots [select_index].transform.GetChild (0).GetComponent<Item> ();
+			item_name.text = item.name;
+			item_stats.text = item.stats;
+			item_description.text = item.description;
+			//item_rarity
+		} 
+		// otherwise show nothing
+		else
+		{
+			item_name.text = "";
+			item_stats.text = "";
+			item_description.text = "";
+		}
 	}
 }

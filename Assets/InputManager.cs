@@ -179,6 +179,7 @@ public class InputManager : MonoBehaviour {
 				pm.Collect();
 				break;
 			case GAMESTATE.MENU:
+				im.RemoveItem ();
 				break;
 			}
 		}
@@ -190,6 +191,7 @@ public class InputManager : MonoBehaviour {
 			if (menu.activeSelf)
 			{
 				state = GAMESTATE.MENU;
+
 			} else
 			{
 				state = GAMESTATE.ACTIVE;

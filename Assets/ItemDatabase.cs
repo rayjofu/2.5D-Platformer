@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemDatabase : MonoBehaviour {
-	public GameObject[] item_database;
+	public GameObject[] item;
 
-	void Start()
+	public GameObject GetPrefab(int id)
 	{
-
-	}
-
-	void Update()
-	{
-
+		return item [id];
 	}
 }
