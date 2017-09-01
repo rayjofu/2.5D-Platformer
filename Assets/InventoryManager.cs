@@ -16,7 +16,7 @@ public class InventoryManager : MonoBehaviour {
 
 	public enum DIRECTION {UP, DOWN, LEFT, RIGHT};
 
-	void Start()
+	void Awake()
 	{
 		select_index = 11;
 		inventory = new List<Item> ();
@@ -26,11 +26,11 @@ public class InventoryManager : MonoBehaviour {
 	public void AddItem(Item item)
 	{
 		// if item already exists in inventory, increment stock
-		foreach (Item i in inventory)
+		for (int i = 0; i < inventory.Count; i++)
 		{
-			if (item.id == i.id)
+			if (item.id == inventory[i].id)
 			{
-				i.AddStock (item.stock);
+				inventory[i].AddStock (item.stock);
 				return;
 			}
 		}
@@ -86,7 +86,6 @@ public class InventoryManager : MonoBehaviour {
 		}
 	}
 
-
 	public void RemoveItem()
 	{
 		int index = ConvertIndexFromSlotToInventory (select_index);
@@ -116,12 +115,17 @@ public class InventoryManager : MonoBehaviour {
 
 	}
 
+	public void SetItemDetails(string name = "", string stats = "", string description = "")
+	{
+
+	}
+
 	// for debugging
 	public void PrintInventory()
 	{
-		foreach (Item item in inventory)
+		for (int i = 0; i < inventory.Count; i++)
 		{
-			item.Print ();
+			inventory[i].Print ();
 		}
 	}
 

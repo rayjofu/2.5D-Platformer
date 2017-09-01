@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour {
 	public float jumpSpeed = 50;
 	List<Item> nearby;
 	List<Transporter> transporters;
+	Rigidbody body;
 
 	public enum DIRECTION { UP, DOWN, LEFT, RIGHT };
 
@@ -16,6 +17,7 @@ public class PlayerManager : MonoBehaviour {
 	{
 		nearby = new List<Item> ();
 		transporters = new List<Transporter> ();
+		body = this.GetComponent<Rigidbody> ();
 	}
 		
 	/*
@@ -49,16 +51,16 @@ public class PlayerManager : MonoBehaviour {
 			return;
 		}
 			
-		foreach (Transporter transporter in transporters)
+		for (int i = 0; i < transporters.Count; i++)
 		{
-			Vector3 newPos = transporter.GetExitPosition ();
+			Vector3 newPos = transporters[i].GetExitPosition ();
 			if (dir == DIRECTION.UP && this.transform.position.z < newPos.z)
 			{
-				this.transform.position = transporter.GetExitPosition ();
+				this.transform.position = transporters[i].GetExitPosition ();
 				return;
 			} else if (dir == DIRECTION.DOWN && this.transform.position.z > newPos.z)
 			{
-				this.transform.position = transporter.GetExitPosition ();
+				this.transform.position = transporters[i].GetExitPosition ();
 				return;
 			}
 		}
@@ -66,15 +68,15 @@ public class PlayerManager : MonoBehaviour {
 
 	public void Jump()
 	{
-		this.transform.position += new Vector3 (0, jumpSpeed, 0) * Time.deltaTime;
+		body.AddForce (Vector3.up * jumpSpeed);
 	}
 
 	public void Collect()
 	{
-		foreach (Item item in nearby)
+		for (int i = 0; i < nearby.Count; i++)
 		{
-			im.AddItem (item);
-			Destroy (item.gameObject);
+			im.AddItem (nearby[i]);
+			Destroy (nearby[i].gameObject);
 		}
 		nearby.Clear ();
 	}
